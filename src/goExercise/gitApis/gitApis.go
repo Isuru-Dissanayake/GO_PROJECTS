@@ -5,14 +5,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type UserData struct {
-	Id       int    `json:"id"`
-	Username string `json:"login"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Location string `json:"location"`
+	Id        int    `json:"id"`
+	Username  string `json:"login"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Location  string `json:"location"`
+	FirstName string
+	LastName  string
 }
 
 type UserFollowers struct {
@@ -43,6 +46,11 @@ func GetUserData(userName string, privateKey string) UserData {
 		body, _ := ioutil.ReadAll(resp.Body)
 		json.Unmarshal(body, &userInfo)
 	}
+
+	nameSplit := strings.Split(userInfo.Name, " ")
+	userInfo.FirstName = nameSplit[0]
+	userInfo.LastName = nameSplit[1]
+
 	return userInfo
 }
 
